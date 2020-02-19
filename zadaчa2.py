@@ -53,13 +53,15 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_PAGEUP:
                 delta = float(delta)
-                delta *= 1.75
+                delta *= 1.8
+                if delta > 90:
+                    delta /= 1.8
                 delta = str(delta)
                 params["spn"] = ",".join([delta, delta])
                 request()
             elif event.key == pygame.K_PAGEDOWN:
                 delta = float(delta)
-                delta /= 1.75
+                delta /= 1.8
                 delta = str(delta)
                 params["spn"] = ",".join([delta, delta])
                 request()
