@@ -10,6 +10,8 @@ lat = input("Широту (от -80 до 80): ")
 delta = input('Масштаб (от 0 до 90): ')
 size = width, height = 600, 450
 screen = pygame.display.set_mode(size)
+view = 0
+views = ['map', 'sat', 'sat,skl']
 pygame.init()
 
 
@@ -29,7 +31,7 @@ def request():
     params = {
         "ll": ",".join([lon, lat]),
         "spn": ",".join([delta, delta]),
-        "l": "sat"
+        "l": views[view % 3]
     }
     response = requests.get(api_server, params=params)
     if response:
@@ -50,11 +52,11 @@ while running:
             running = False
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
-                if -80 <= float(lat) + 0.1 * float(delta) <= 80:
+                if -80 < float(lat) + 0.1 * float(delta) < 80:
                     lat = str(float(lat) + 0.1 * float(delta))
                     request()
             elif event.key == pygame.K_DOWN:
-                if -80 <= float(lat) - 0.1 * float(delta) <= 80:
+                if -80 < float(lat) - 0.1 * float(delta) < 80:
                     lat = str(float(lat) - 0.1 * float(delta))
                     request()
             elif event.key == pygame.K_LEFT:
@@ -65,6 +67,9 @@ while running:
                 if -179 <= float(lon) + 0.1 * float(delta) <= 179:
                     lon = str(float(lon) + 0.1 * float(delta))
                     request()
+            elif event.key == pygame.K_v:
+                view += 1
+                request()
             elif event.key == pygame.K_PAGEUP:
                 if 0 < float(delta) / 1.8 < 90:
                     delta = str(float(delta) / 1.8)
